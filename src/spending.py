@@ -154,9 +154,7 @@ class Expenses:
     print(f"Details: {data['details']}")
 
 
-  def addExpense(self):
-    print('-'*30)
-    print("ADDING EXPENSE")
+  def getValidCategory(self):
     self.printCategories()
     validResponse = False
     while not validResponse:
@@ -165,6 +163,21 @@ class Expenses:
         validResponse = self.checkCategoryNum(index-1)
       except ValueError:
         print("Enter the number corresponding to the categories stated above")
+    return index
+
+
+  def addExpense(self):
+    print('-'*30)
+    print("ADDING EXPENSE")
+    # self.printCategories()
+    # validResponse = False
+    # while not validResponse:
+    #   try:
+    #     index = int(input("Enter the category number: "))
+    #     validResponse = self.checkCategoryNum(index-1)
+    #   except ValueError:
+    #     print("Enter the number corresponding to the categories stated above")
+    index = self.getValidCategory()
 
     category = self.categories[index-1]
     scan = self.getValidYN("Would you like to scan a receipt? (y/n): ")
@@ -189,3 +202,10 @@ class Expenses:
     expenseData = self.getExpenseInfo(expenseData)
     self.recordExpense(expenseData)
     self.printAddedExpenseSummary(expenseData)
+
+
+  def removeExpense(self):
+    print('-'*30)
+    print('REMOVING EXPENSE\n')
+    print("From which category is the expense from?")
+

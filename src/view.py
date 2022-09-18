@@ -31,16 +31,7 @@ class View:
     print('-'*30)
     print("Enter category number")
     expenses = Expenses()
-    expenses.printCategories()
-    validResponse = False
-    index = 0
-    while not validResponse:
-      try:
-        index = int(input("Enter the category number: "))
-        validResponse = expenses.checkCategoryNum(index-1)
-        print()
-      except ValueError:
-        print("Enter the number corresponding to the categories stated above")
+    index = expenses.getValidCategory()
     category = expenses.categories[index-1]
     with open(f'src/Data/{category}.txt') as file:
       print('-'*30)

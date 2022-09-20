@@ -26,20 +26,24 @@ class Commands:
         addEx = Expenses()
         addEx.addExpense()
       elif command == 'remove expense' or command == '2':
-        pass
+        rmEx = Expenses()
+        rmEx.removeExpense()
       elif command == 'add category' or command == '3':
         addCat = Expenses()
         addCat.addCategory()
         addCat.printCategories()
       elif command == 'view all' or command == '4':
-        view = View()
-        view.viewAll()
+        viewAll = View()
+        viewAll.viewAll()
       elif command == 'view spending categories' or command == '5':
-        view = View()
-        view.viewSpendingCategories()
+        viewSCat = View()
+        viewSCat.viewSpendingCategories()
       elif command == 'view category expenses' or command == '6':
-        view = View()
-        view.viewCategory()
+        viewCat = Expenses()
+        categoryIndex = viewCat.getValidCategory()
+        category = viewCat.categories[categoryIndex-1]
+        totalAmt = viewCat.printCategory(category)
+        print(f"Total: ${totalAmt}")
       elif command == 'exit' or command == '7':
         done = True
       else:

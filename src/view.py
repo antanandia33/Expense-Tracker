@@ -27,18 +27,4 @@ class View:
       for line in lines:
         print(line)
 
-  def viewCategory(self): 
-    print('-'*30)
-    print("Enter category number")
-    expenses = Expenses()
-    index = expenses.getValidCategory()
-    category = expenses.categories[index-1]
-    with open(f'src/Data/{category}.txt') as file:
-      print('-'*30)
-      print(f"CATEGORY: {category}")
-      lines = file.readlines()
-      totalAmt = lines[0]
-      for i in range(1,len(lines)):
-        data = re.split('\||\n', lines[i])
-        print(f'{data[0]} {data[1]} {data[2]}\n')
-      print(f"Total: ${totalAmt}")
+      

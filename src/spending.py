@@ -169,14 +169,6 @@ class Expenses:
   def addExpense(self):
     print('-'*30)
     print("ADDING EXPENSE")
-    # self.printCategories()
-    # validResponse = False
-    # while not validResponse:
-    #   try:
-    #     index = int(input("Enter the category number: "))
-    #     validResponse = self.checkCategoryNum(index-1)
-    #   except ValueError:
-    #     print("Enter the number corresponding to the categories stated above")
     index = self.getValidCategory()
 
     category = self.categories[index-1]
@@ -204,8 +196,66 @@ class Expenses:
     self.printAddedExpenseSummary(expenseData)
 
 
+  def printCategory(self, category:str):
+    print('-'*30)
+    with open(f'src/Data/{category}.txt') as file:
+      print(f"CATEGORY: {category}")
+      lines = file.readlines()
+      totalAmt = lines[0]
+      for i in range(1,len(lines)):
+        data = re.split('\||\n', lines[i])
+        print(f'{i}) DATE: {data[0]} AMOUNT: ${data[1]} DETAILS: {data[2]}\n')
+    return totalAmt
+
+
+  def removeFromFile(self, expense:str, category:str):
+    with open(f'src/Data/{category}.txt', 'r+') as file:
+      lines = file.readlines()
+      lines.remove(expense)
+      print(lines)
+      file.truncate(0)
+      file.seek(0)
+      for line in lines:
+        file.write(line)
+    with open(f'src/Data/allExpenses.txt', 'r+') as file:
+      lines = file.readlines()
+      lines.remove(expense)
+      print(lines)
+      file.truncate(0)
+      file.seek(0)
+      for line in lines:
+        file.write(line)
+
+
+
   def removeExpense(self):
     print('-'*30)
     print('REMOVING EXPENSE\n')
     print("From which category is the expense from?")
+    categoryIndex = self.getValidCategory()
+    category = self.categories[categoryIndex-1]
+    self.printCategory(category)
+    print('-'*30)
+    with open(f'src/Data/{category}.txt', 'r') as file:
+      lines = file.readlines()
+      indexes = len(lines)-1 
+      isValidIndex = False
+      expenseIndex = 0 
+      while not isValidIndex:
+        try:
+          expenseIndex = int(input("Enter the index of the expense that will be removed: "))
+          if expenseIndex >= 1 and expenseIndex <= indexes:
+            isValidIndex = True
+          else:
+            print("Enter valid index")
+        except ValueError:
+          print("Enter valid index")
+      data = re.split('\||\n', lines[expenseIndex])
+      if self.getValidYN(f"\nREMOVING EXPENSE\nDATE: {data[0]}\nAMOUNT: ${data[1]}\nDETAILS: {data[2]}\nCONFIRM REMOVAL? (y/n): ") == 'y':
+        self.removeFromFile(lines[expenseIndex], category)
+        print("REMOVAL SUMMARY")
+
+      else:
+        print("Canceling removal")
+      
 

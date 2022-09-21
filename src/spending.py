@@ -209,18 +209,24 @@ class Expenses:
 
 
   def removeFromFile(self, expense:str, category:str):
+    data = re.split('\||\n', expense)
+    removedCost = float(data[1])
+    print(removedCost)
     with open(f'src/Data/{category}.txt', 'r+') as file:
       lines = file.readlines()
+      newTotal = float(lines[0]) - removedCost
+      lines[0] = str(newTotal) + '\n'
       lines.remove(expense)
-      print(lines)
       file.truncate(0)
       file.seek(0)
       for line in lines:
         file.write(line)
     with open(f'src/Data/allExpenses.txt', 'r+') as file:
       lines = file.readlines()
+      newTotal = float(lines[0]) - removedCost
+      lines[0] = str(newTotal) + '\n'
+      expense = expense[:11] + category + '|' + expense[11:]
       lines.remove(expense)
-      print(lines)
       file.truncate(0)
       file.seek(0)
       for line in lines:
@@ -228,7 +234,7 @@ class Expenses:
 
 
 
-  def removeExpense(self):
+  def removeExpense(self): # make it so that if the file is empty you cant remove stuff
     print('-'*30)
     print('REMOVING EXPENSE\n')
     print("From which category is the expense from?")
@@ -253,8 +259,9 @@ class Expenses:
       data = re.split('\||\n', lines[expenseIndex])
       if self.getValidYN(f"\nREMOVING EXPENSE\nDATE: {data[0]}\nAMOUNT: ${data[1]}\nDETAILS: {data[2]}\nCONFIRM REMOVAL? (y/n): ") == 'y':
         self.removeFromFile(lines[expenseIndex], category)
-        print("REMOVAL SUMMARY")
-
+        print('-'*30)
+        print("REMOVAL SUMMARY:")
+        print(f"DATE: {data[0]}\nCATEGORY: {category}\nAMOUNT: ${data[1]}\nDETAILS: {data[2]}\n")
       else:
         print("Canceling removal")
       

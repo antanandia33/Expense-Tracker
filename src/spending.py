@@ -208,6 +208,16 @@ class Expenses:
     return totalAmt
 
 
+  def emptyCategory(self, category:str):
+    with open(f'src/Data/{category}.txt', 'r') as file:
+      lines = file.readlines()
+      amount = lines[0].split()
+      amount = float(amount[0])
+      if amount == 0:
+        return True
+    return False
+
+
   def removeFromFile(self, expense:str, category:str):
     data = re.split('\||\n', expense)
     removedCost = float(data[1])
@@ -240,6 +250,10 @@ class Expenses:
     print("From which category is the expense from?")
     categoryIndex = self.getValidCategory()
     category = self.categories[categoryIndex-1]
+    if (self.emptyCategory(category) == True):
+      print("\nEmpty Category")
+      print("Canceling Removal")
+      return
     self.printCategory(category)
     print('-'*30)
     with open(f'src/Data/{category}.txt', 'r') as file:

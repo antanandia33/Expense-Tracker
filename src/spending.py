@@ -32,8 +32,25 @@ class Expenses:
     with open('src/Data/spendingCategories.txt', 'a') as file:
       file.write(newCategory+'\n')
     with open(f'src/Data/{newCategory}.txt','w') as file:
-      file.write('0')
+      file.write('0\n')
     print(f"Category {newCategory} was added:")
+
+
+  def removeCategory(self): ##FIX ADD AND REMOVE CATEGORY
+    print("Select a category to be removed")
+    index = self.getValidCategory()
+    category = self.categories[index-1]
+    if self.getValidYN(f"Confirm removal of the {category} category? (y/n): ") == 'y':
+      os.remove(f"src/Data/{category}.txt")
+      print(f"CATEGORY REMOVED: {category}")
+      self.categories.remove(category)
+      for c in self.categories:
+        print(c)
+      with open('src/Data/spendingCategories.txt', 'w') as file:
+        for c in self.categories:
+          file.write(c + '\n')
+    else:
+      print("Canceling Removal")
 
 
   def scanReceipt(self):

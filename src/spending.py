@@ -19,7 +19,7 @@ class Expenses:
 
   def printCategories(self):
     print('-'*30)
-    print('Categories:')
+    print('CATEGORIES:')
     for i,x in enumerate(self.categories):
       print(f'{i+1} {x}')
     print()
@@ -36,7 +36,28 @@ class Expenses:
     print(f"Category {newCategory} was added:")
 
 
-  def removeCategory(self): ##FIX ADD AND REMOVE CATEGORY
+  def removeCategoryFromAll(self, category:str):
+    lines = []
+    removedExpenses = []
+    newAmount = 0.0
+    with open('src/Data/allExpenses.txt', 'r') as file:
+      lines = file.readlines()
+      newAmount = float(lines[0])
+      for i in range(1,len(lines)):
+        data = re.split('\||\n', lines[i])
+        if data[1] == category:
+          removedExpenses.append(lines[i])
+          newAmount = newAmount - float(data[2])
+      for expense in removedExpenses:
+        lines.remove(expense)
+    lines[0] = str(newAmount) + '\n'
+    with open('src/Data/allExpenses.txt', 'w') as file:
+      for line in lines:
+        file.write(line)
+
+
+
+  def removeCategory(self): 
     print("Select a category to be removed")
     index = self.getValidCategory()
     category = self.categories[index-1]
@@ -49,6 +70,7 @@ class Expenses:
       with open('src/Data/spendingCategories.txt', 'w') as file:
         for c in self.categories:
           file.write(c + '\n')
+      self.removeCategoryFromAll(category)
     else:
       print("Canceling Removal")
 
@@ -213,18 +235,6 @@ class Expenses:
     self.printAddedExpenseSummary(expenseData)
 
 
-  def printCategory(self, category:str):
-    print('-'*30)
-    with open(f'src/Data/{category}.txt') as file:
-      print(f"CATEGORY: {category}")
-      lines = file.readlines()
-      totalAmt = lines[0]
-      for i in range(1,len(lines)):
-        data = re.split('\||\n', lines[i])
-        print(f'{i}) DATE: {data[0]} AMOUNT: ${data[1]} DETAILS: {data[2]}\n')
-    return totalAmt
-
-
   def emptyCategory(self, category:str):
     with open(f'src/Data/{category}.txt', 'r') as file:
       lines = file.readlines()
@@ -261,7 +271,7 @@ class Expenses:
 
 
 
-  def removeExpense(self): # make it so that if the file is empty you cant remove stuff
+  def removeExpense(self): 
     print('-'*30)
     print('REMOVING EXPENSE\n')
     print("From which category is the expense from?")
@@ -295,5 +305,3 @@ class Expenses:
         print(f"DATE: {data[0]}\nCATEGORY: {category}\nAMOUNT: ${data[1]}\nDETAILS: {data[2]}\n")
       else:
         print("Canceling removal")
-      
-

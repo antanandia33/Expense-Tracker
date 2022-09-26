@@ -3,6 +3,8 @@ from datetime import datetime
 from datetime import date
 from src.receiptScan import Scan
 import re
+from src.view import View
+
 
 def getCategories():
   with open('src/Data/spendingCategories.txt', 'r') as file:
@@ -65,8 +67,6 @@ class Expenses:
       os.remove(f"src/Data/{category}.txt")
       print(f"CATEGORY REMOVED: {category}")
       self.categories.remove(category)
-      for c in self.categories:
-        print(c)
       with open('src/Data/spendingCategories.txt', 'w') as file:
         for c in self.categories:
           file.write(c + '\n')
@@ -270,7 +270,6 @@ class Expenses:
         file.write(line)
 
 
-
   def removeExpense(self): 
     print('-'*30)
     print('REMOVING EXPENSE\n')
@@ -281,7 +280,8 @@ class Expenses:
       print("\nEmpty Category")
       print("Canceling Removal")
       return
-    self.printCategory(category)
+    catExpenses = View()
+    catExpenses.viewCategoryExpenses(category)
     print('-'*30)
     with open(f'src/Data/{category}.txt', 'r') as file:
       lines = file.readlines()
